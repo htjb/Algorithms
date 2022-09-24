@@ -7,14 +7,14 @@ Working from this tutorial...
 https://peterroelants.github.io/posts/gaussian-process-tutorial/
 """
 
-def GP(X1, y1, X2, kernel_func):
+def GP(X1, y1, X2, kernel_func, sigma_noise=0):
     """
     X1 and y1 are the data points and X2 is the range you want to
     perform the regression over so y2 is the fitted output.
 
     can think of 2 as the posterior and the kernel as a prior
     """
-    sigma11 = kernel_func(X1, X1)
+    sigma11 = kernel_func(X1, X1) + ((sigma_noise ** 2) * np.eye(len(X1)))
     sigma12 = kernel_func(X1, X2)
     sigma22 = kernel_func(X2, X2)
     solved = scipy.linalg.solve(sigma11, sigma12, assume_a='pos').T
@@ -32,12 +32,14 @@ def exponentiated_quadratic_kernel(xa, xb):
         matrix.append(row)
     return np.array(matrix)
 
-X1 = np.random.uniform(-4, 4, 8)
-y1 = np.sin(X1)
+X1 = np.random.uniform(-4, 4, 200)
+X1 = np.sort(X1)
+sn = 1
+y1 = np.sin(X1) + np.random.normal(0, sn**2, len(X1))
 
 X2 = np.linspace(-6, 6, 100)
 
-mu2, sigma2 = GP(X1, y1, X2, exponentiated_quadratic_kernel)
+mu2, sigma2 = GP(X1, y1, X2, exponentiated_quadratic_kernel, sigma_noise=sn)
 
 s2 = np.sqrt(np.diag(sigma2))
 y2 = np.random.multivariate_normal(mean=mu2, cov=sigma2)
