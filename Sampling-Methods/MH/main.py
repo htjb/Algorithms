@@ -19,7 +19,6 @@ def fit(likelihood, mins, maxs, niter=1000):
     def gaussian_proposal(x):
         return np.random.normal(x, 1, 3)
 
-    tol = (maxs - mins)/100
     x, i = [], 0
     x.append(np.random.uniform(mins, maxs))
     while i < niter:
