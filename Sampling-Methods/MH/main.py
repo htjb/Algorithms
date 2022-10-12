@@ -17,7 +17,7 @@ def fit(likelihood, mins, maxs, niter=1000):
     """
 
     def gaussian_proposal(x):
-        return np.random.normal(x, 1, 3)
+        return np.random.normal(x, 0.1, 3)
 
     x, i = [], 0
     x.append(np.random.uniform(mins, maxs))
@@ -27,8 +27,8 @@ def fit(likelihood, mins, maxs, niter=1000):
         if np.any(x_new < mins) or np.any(x_new > maxs):
             pass
         else:
-            u = np.random.uniform(0, 1)
-            A =  likelihood(x[i])/likelihood(x_new)
+            u = np.log10(np.random.uniform(0, 1))
+            A =  likelihood(x_new) - likelihood(x[i])
             if u <= A:
                 x.append(x_new)
                 i += 1
@@ -53,7 +53,7 @@ data = A*np.exp(-(x-mu)**2/(2*sigma**2)) + experiment_noise
 mins = np.array([-100, 12, 0])
 maxs = np.array([-30, 18, 2])
 
-points = fit(likelihood, mins, maxs, niter=100000)
+points = fit(likelihood, mins, maxs, niter=1000)
 
 likes = np.array([likelihood(points[i]) for i in range(len(points))])
 max_arg = np.where(likes == likes.max())[0][0]
