@@ -105,8 +105,8 @@ for epoch in range(num_epochs):
         y = one_hot(y, num_lables)
         params = update(params, x, y)
     epoch_time = time.time() - start_time
+    print(f"Epoch {epoch} in {epoch_time:.2f} sec")
 
-train_acc = accuracy(params, train_images, train_labels)
-test_acc = accuracy(params, test_images, test_labels)
-print(f"Train acc: {train_acc}, Test acc: {test_acc}")
-print(f"Epoch time: {epoch_time}")
+    train_acc = accuracy(params, train_images, train_labels)
+    test_acc = accuracy(params, test_images, test_labels)
+    print(f"Train acc: {train_acc}, Test acc: {test_acc}")
